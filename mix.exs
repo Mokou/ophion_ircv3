@@ -7,7 +7,20 @@ defmodule Ophion.IRCv3.MixProject do
       version: "0.1.0",
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
-      deps: []
+      deps: [],
+      package: package(),
+      description: "A module providing IRCv3 message parsing and composition."
+    ]
+  end
+
+  def package do
+    [
+      maintainers: ["Ariadne Conill"],
+      licenses: ["BSD-3-Clause"],
+      links: %{
+        "GitHub" => "https://github.com/ophion-project/ophion_ircv3",
+        "Issues" => "https://github.com/ophion-project/ophion_ircv3/issues"
+      }
     ]
   end
 
