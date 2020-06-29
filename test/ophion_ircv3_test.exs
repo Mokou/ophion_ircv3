@@ -17,5 +17,12 @@ defmodule Ophion.IRCv3.Test do
   end
 
   describe "Ophion.IRCv3.parse/1 -" do
+    test "it parses messages" do
+      {:ok, message} = Ophion.IRCv3.parse(":kaniini!~kaniini@localhost PRIVMSG #foo :bar")
+
+      assert message.source == "kaniini!~kaniini@localhost"
+      assert message.verb == "PRIVMSG"
+      assert message.params == ["#foo", "bar"]
+    end
   end
 end
