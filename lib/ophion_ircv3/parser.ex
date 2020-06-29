@@ -35,7 +35,7 @@ defmodule Ophion.IRCv3.Parser do
 
       parse(msg, rest)
     else
-      err -> err
+      [_tags] -> {:error, :invalid_message}
     end
   end
 
@@ -45,7 +45,7 @@ defmodule Ophion.IRCv3.Parser do
 
       parse(msg, rest)
     else
-      err -> err
+      [_source] -> {:error, :invalid_message}
     end
   end
 
@@ -55,13 +55,16 @@ defmodule Ophion.IRCv3.Parser do
 
       parse(msg, rest)
     else
-      [verb] ->
-        msg = Map.put(msg, :verb, verb)
+      [verb] when byte_size(verb) > 0 ->
+        msg =
+          msg
+          |> Map.put(:verb, verb)
+          |> Map.put(:params, [])
 
         {:ok, msg}
 
-      err ->
-        err
+      [_empty] ->
+        {:error, :invalid_message}
     end
   end
 
