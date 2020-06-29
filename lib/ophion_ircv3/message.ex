@@ -3,10 +3,8 @@ defmodule Ophion.IRCv3.Message do
 
   alias Ophion.IRCv3.Message
 
-  # XXX: implement me
-  def validate(%Message{} = _msg) do
-    :ok
-  end
-
+  # verb is required to be set
+  def validate(%Message{verb: nil}), do: {:error, :invalid_message}
+  def validate(%Message{}), do: :ok
   def validate(_), do: {:error, :invalid_message}
 end

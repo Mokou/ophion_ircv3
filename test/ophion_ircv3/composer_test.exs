@@ -11,10 +11,27 @@ defmodule Ophion.IRCv3.Composer.Test do
     params: ["#chan"]
   }
 
+  @privmsg %Message{
+    tags: %{},
+    source: "kaniini!~kaniini@localhost",
+    verb: "PRIVMSG",
+    params: ["#chan", "how are you"]
+  }
+
   describe "sanity -" do
     test "it properly composes a basic rfc1459 message" do
       {:ok, ":kaniini!~kaniini@localhost JOIN #chan\r\n"} =
         @basicmsg
+        |> Composer.compose()
+    end
+
+    test "it errors when a non-message is passed" do
+      {:error, :invalid_message} = Composer.compose(nil)
+    end
+
+    test "it errors on a tag-only message" do
+      {:error, :invalid_message} =
+        %Message{tags: %{"ophion.dev/a" => nil}}
         |> Composer.compose()
     end
   end
@@ -102,6 +119,31 @@ defmodule Ophion.IRCv3.Composer.Test do
             "ophion.dev/admin" => nil
           }
         )
+        |> Composer.compose()
+    end
+  end
+
+  describe "source -" do
+    test "it properly composes messages without a source" do
+      {:ok, "JOIN #chan\r\n"} =
+        @basicmsg
+        |> Map.put(:source, nil)
+        |> Composer.compose()
+    end
+  end
+
+  describe "params -" do
+    test "it properly composes messages with a trailing multi-word param" do
+      {:ok, ":kaniini!~kaniini@localhost PRIVMSG #chan :how are you\r\n"} =
+        @privmsg
+        |> Composer.compose()
+    end
+
+    test "it properly composes messages without params" do
+      {:ok, ":kaniini!~kaniini@localhost INFO\r\n"} =
+        @basicmsg
+        |> Map.put(:verb, "INFO")
+        |> Map.put(:params, [])
         |> Composer.compose()
     end
   end

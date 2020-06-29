@@ -34,11 +34,10 @@ defmodule Ophion.IRCv3.Composer do
 
   defp tags(input, _), do: input
 
-  defp source(input, %Message{source: src}), do: input ++ [":" <> src]
+  defp source(input, %Message{source: src}) when is_binary(src), do: input ++ [":" <> src]
   defp source(input, _), do: input
 
-  defp verb(input, %Message{verb: verb}), do: input ++ [verb]
-  defp verb(input, _), do: input
+  defp verb(input, %Message{verb: verb}) when is_binary(verb), do: input ++ [verb]
 
   defp params(input, %Message{params: params}) when length(params) > 0 do
     {last_param, composed_params} = List.pop_at(params, -1)
