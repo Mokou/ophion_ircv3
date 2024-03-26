@@ -19,6 +19,7 @@ defmodule Ophion.IRCv3.Composer do
 
   defp tag([key]), do: [key]
   defp tag([key, nil]), do: [key]
+  defp tag([key, ""]), do: [key]
   defp tag(tval) when is_list(tval), do: [Enum.join(tval, "=")]
   defp tag(_), do: []
 

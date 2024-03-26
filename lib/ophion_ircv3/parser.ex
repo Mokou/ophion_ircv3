@@ -23,7 +23,11 @@ defmodule Ophion.IRCv3.Parser do
           cond do
             String.contains?(tag, "=") ->
               [key, value] = String.split(tag, "=", parts: 2)
-              {key, unescape_value(value)}
+
+              case value do
+                "" -> {key, nil}
+                _ -> {key, unescape_value(value)}
+              end
 
             true ->
               {tag, nil}
